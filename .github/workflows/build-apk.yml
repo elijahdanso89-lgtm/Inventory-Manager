@@ -13,22 +13,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: pnpm install
+      - name: Navigate to mobile app
+        run: cd mobile
 
-      - name: Install EAS CLI locally
-        run: pnpm add -D eas-cli
+      - name: Install dependencies
+        run: |
+          cd mobile
+          npm install
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
 
       - name: Build APK with EAS
-        run: npx eas build --platform android --profile preview --non-interactive
+        run: |
+          cd mobile
+          npx eas build --platform android --profile preview --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
@@ -36,4 +40,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: inventoria-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          path: mobile/app/build/outputs/apk/release/app-release.apk

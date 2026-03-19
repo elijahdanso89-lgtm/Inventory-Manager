@@ -20,22 +20,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Expo CLI
-        run: pnpm add -g expo-cli
-
-      - name: Install EAS CLI
-        run: pnpm add -g eas-cli
-
-      - name: Log in to Expo
-        run: echo "${{ secrets.EXPO_TOKEN }}" | npx expo login --non-interactive --username elijahdanso89-lgtm
+      - name: Install EAS CLI locally
+        run: pnpm add -D eas-cli
 
       - name: Build APK with EAS
         run: npx eas build --platform android --profile preview --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

@@ -13,13 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: List root directory
+        run: ls -la
+
+      - name: Navigate to mobile app
+        run: cd mobile && pwd && ls -la
+        continue-on-error: true   # So we see the error but continue
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Navigate to mobile app
-        run: cd mobile
 
       - name: Install dependencies
         run: |

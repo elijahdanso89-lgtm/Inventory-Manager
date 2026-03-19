@@ -1,0 +1,40 @@
+name: Build Inventoria APK
+
+on:
+  push:
+    branches: [ Main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Log in to Expo
+        run: echo "${{ secrets.EXPO_TOKEN }}" | npx expo login --non-interactive --username elijahdanso89-lgtm
+
+      - name: Build APK with EAS
+        run: eas build --platform android --profile preview --non-interactive
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: inventoria-apk
+          path: app/build/outputs/apk/release/app-release.apk
